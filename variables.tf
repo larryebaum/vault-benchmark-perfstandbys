@@ -90,7 +90,7 @@ variable "ami" {
 }
 
 variable "public_ip" {
-    default = false
+    default = true
     description = "should ec2 instance have public ip?"
 }
 
@@ -120,7 +120,7 @@ variable "consul_elb_health_check" {
 }
 
 variable "elb_internal" {
-    default = true
+    default = false
     description = "make ELB internal or external"
 }
 
