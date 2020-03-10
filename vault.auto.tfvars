@@ -10,8 +10,8 @@ instance_type_consul = "t2.micro"
 key_name = "mattpeters"
 vault_name_prefix = "mattspeters-benchmark-vault"
 consul_name_prefix = "mattspeters-benchmark-consul"
-vpc_id = "vpc-0440babb35f2e1740"
-subnets = "subnet-06ba3dfc0719a396d"
+vpc_id = "vpc-03e9af5aa624e650c"
+subnets = "subnet-06b2354575ce443a7"
 
 elb_internal = false
 public_ip = true
