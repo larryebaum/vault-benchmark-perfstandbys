@@ -17,7 +17,7 @@ elb_internal = false
 public_ip = true
 
 vault_nodes = "3"
-consul_nodes = "5"
+consul_nodes = "3"
 
 # This downloads Vault Enterprise by default
 vault_download_url = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/1.1.2/vault-enterprise_1.1.2%2Bent_linux_amd64.zip"
