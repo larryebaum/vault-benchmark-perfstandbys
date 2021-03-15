@@ -6,6 +6,44 @@ provider aws {
   region = "${var.aws-region}"
 }
 
+locals {
+  common_tags = {
+    owner = var.owner
+    se-region = var.se_region
+    purpose = var.purpose
+    ttl = var.ttl #-1 must has justification as purpose
+    terraform = var.terraform
+    creator = var.name
+    customer = var.customer
+    tfe-workspace = var.tfe_workspace
+    lifecycle-action = var.lifecycle_action
+  }
+}
+
+resource aws_vpc "vpc" {
+  cidr_block           = var.address_space
+  enable_dns_hostnames = true
+  tags = "${merge(
+    local.common_tags,
+    map(
+      "Name", "${var.prefix}-subnet"
+    )
+  )}"
+}
+
+resource aws_subnet "subnet" {
+  vpc_id     = aws_vpc.vpc.id
+  cidr_block = var.subnet_prefix
+  tags = "${merge(
+    local.common_tags,
+    map(
+      "Name", "${var.prefix}-subnet"
+    )
+  )}"
+}
+
+#### added above 3/15/21
+
 data "template_file" "install_vault" {
     template = "${file("${path.module}/scripts/install_vault_server.sh.tpl")}"
 
