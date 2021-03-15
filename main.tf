@@ -8,20 +8,20 @@ provider aws {
 
 locals {
   common_tags = {
-    owner = var.owner
-    se-region = var.se_region
-    purpose = var.purpose
-    ttl = var.ttl #-1 must has justification as purpose
-    terraform = var.terraform
-    creator = var.name
-    customer = var.customer
-    tfe-workspace = var.tfe_workspace
-    lifecycle-action = var.lifecycle_action
+    owner = "${var.owner}"
+    se-region = "${var.se_region}"
+    purpose = "${var.purpose}"
+    ttl = "${var.ttl}" #-1 must has justification as purpose
+    terraform = "${var.terraform}"
+    creator = "${var.name}"
+    customer = "${var.customer}"
+    tfe-workspace = "${var.tfe_workspace}"
+    lifecycle-action = "${var.lifecycle_action}"
   }
 }
 
 resource aws_vpc "vpc" {
-  cidr_block           = var.address_space
+  cidr_block           = "${var.address_space}"
   enable_dns_hostnames = true
   tags = "${merge(
     local.common_tags,
