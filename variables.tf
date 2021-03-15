@@ -173,3 +173,31 @@ variable "aws-region" {
     default = "us-east-1"
     description = "aws region to provision into"
 }
+
+variable "se_region" {
+    description = "se region of the resource"
+}
+
+variable "purpose" {
+    description = "purpose of the resource"
+}
+
+variable "terraform" {
+    description = "resource created by terraform y/n"
+}
+
+variable "tfe_workspace" {
+    description = "tfe workspaces for the resource"
+}
+
+variable "customer" {
+    description = "customer of the resource"
+}
+
+variable "creator" {
+    description = "creator of the resource"
+}
+
+variable "lifecycle_action" {
+    description = "lifecycle action of the resource"
+}
