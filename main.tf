@@ -1,3 +1,11 @@
+terraform {
+  required_version = ">= 0.11.14"
+}
+
+provider aws {
+  region = var.aws-region
+}
+
 data "template_file" "install_vault" {
     template = "${file("${path.module}/scripts/install_vault_server.sh.tpl")}"
 
