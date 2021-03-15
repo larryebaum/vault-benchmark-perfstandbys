@@ -3,7 +3,7 @@ terraform {
 }
 
 provider aws {
-  region = var.aws-region
+  region = "${var.aws-region}"
 }
 
 data "template_file" "install_vault" {
