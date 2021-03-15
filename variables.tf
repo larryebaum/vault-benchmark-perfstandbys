@@ -168,3 +168,8 @@ variable "ttl" {
 variable "auto_join_tag" {
     description = "value of ConsulAutoJoin tag used by Consul cluster"
 }
+
+variable "aws-region" {
+    default = "us-east-1"
+    description = "aws region to provision into"
+}
