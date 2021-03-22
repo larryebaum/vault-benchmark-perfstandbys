@@ -1,53 +1,26 @@
-terraform {
-  required_version = "= 0.11.14"
+provider "aws" {
+  region = "us-east-1"
 }
 
-provider aws {
-  region = "${var.aws-region}"
-}
-
-locals {
-  common_tags = {
-    owner = "${var.owner}"
-    se-region = "${var.se_region}"
-    purpose = "${var.purpose}"
-    ttl = "${var.ttl}" #-1 must has justification as purpose
-    terraform = "${var.terraform}"
-    creator = "${var.name}"
-    customer = "${var.customer}"
-    tfe-workspace = "${var.tfe_workspace}"
-    lifecycle-action = "${var.lifecycle_action}"
+module "vpc" {
+  source          = "terraform-aws-modules/vpc/aws"
+  version         = "=v2.60.0"
+  name            = "${var.vault_name_prefix}"
+  cidr            = "10.0.0.0/16"
+  azs             = var.availability_zones
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  enable_nat_gateway = true
+  tags = {
+    hc-owner-dl = "${var.owner}"
   }
 }
 
-resource aws_vpc "vpc" {
-  cidr_block           = "${var.address_space}"
-  enable_dns_hostnames = true
-  tags = "${merge(
-    local.common_tags,
-    map(
-      "Name", "${var.prefix}-subnet"
-    )
-  )}"
-}
-
-resource aws_subnet "subnet" {
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = var.subnet_prefix
-  tags = "${merge(
-    local.common_tags,
-    map(
-      "Name", "${var.prefix}-subnet"
-    )
-  )}"
-}
-
-#### added above 3/15/21
 
 data "template_file" "install_vault" {
     template = "${file("${path.module}/scripts/install_vault_server.sh.tpl")}"
 
-    vars {
+    vars = {
         install_unzip       = "${var.unzip_command}"
         vault_download_url  = "${var.vault_download_url}"
         consul_download_url  = "${var.consul_download_url}"
@@ -60,7 +33,7 @@ data "template_file" "install_vault" {
 data "template_file" "install_consul" {
     template = "${file("${path.module}/scripts/install_consul_server.sh.tpl")}"
 
-    vars {
+    vars = {
         install_unzip       = "${var.unzip_command}"
         consul_download_url  = "${var.consul_download_url}"
         consul_config        = "${var.consul_server_config}"
@@ -73,14 +46,13 @@ data "template_file" "install_consul" {
 resource "aws_autoscaling_group" "vault" {
     name = "${aws_launch_configuration.vault.name}"
     launch_configuration = "${aws_launch_configuration.vault.name}"
-    availability_zones = ["${split(",", var.availability_zones)}"]
 #   min_size = "${var.vault_nodes}"
     min_size = 1
     max_size = "${var.vault_nodes}"
     desired_capacity = "${var.vault_nodes}"
     health_check_grace_period = 15
     health_check_type = "EC2"
-    vpc_zone_identifier = ["${split(",", var.subnets)}"]
+    vpc_zone_identifier = module.vpc.public_subnets
     load_balancers = ["${aws_elb.vault.id}"]
 
     tags = [
@@ -134,13 +106,12 @@ resource "aws_launch_configuration" "vault" {
 resource "aws_autoscaling_group" "consul" {
     name = "${aws_launch_configuration.consul.name}"
     launch_configuration = "${aws_launch_configuration.consul.name}"
-    availability_zones = ["${split(",", var.availability_zones)}"]
     min_size = "${var.consul_nodes}"
     max_size = "${var.consul_nodes}"
     desired_capacity = "${var.consul_nodes}"
     health_check_grace_period = 15
     health_check_type = "EC2"
-    vpc_zone_identifier = ["${split(",", var.subnets)}"]
+    vpc_zone_identifier = module.vpc.public_subnets
     load_balancers = ["${aws_elb.consul.id}"]
 
     tags = [
@@ -240,7 +211,7 @@ data "aws_iam_policy_document" "auto_discover_cluster" {
 resource "aws_security_group" "vault" {
     name = "${var.vault_name_prefix}-sg"
     description = "Vault servers"
-    vpc_id = "${var.vpc_id}"
+    vpc_id = "${module.vpc.vpc_id}"
 }
 
 resource "aws_security_group_rule" "vault_ssh" {
@@ -354,7 +325,7 @@ resource "aws_elb" "vault" {
     connection_draining = true
     connection_draining_timeout = 400
     internal = "${var.elb_internal}"
-    subnets = ["${split(",", var.subnets)}"]
+    subnets = module.vpc.public_subnets
     security_groups = ["${aws_security_group.vault_elb.id}"]
 
     listener {
@@ -380,7 +351,7 @@ resource "aws_elb" "consul" {
     connection_draining = true
     connection_draining_timeout = 400
     internal = "${var.elb_internal}"
-    subnets = ["${split(",", var.subnets)}"]
+    subnets = module.vpc.public_subnets
     security_groups = ["${aws_security_group.vault_elb.id}"]
 
     listener {
@@ -402,7 +373,7 @@ resource "aws_elb" "consul" {
 resource "aws_security_group" "vault_elb" {
     name = "${var.vault_name_prefix}-elb"
     description = "Vault ELB"
-    vpc_id = "${var.vpc_id}"
+    vpc_id = "${module.vpc.vpc_id}"
 }
 
 resource "aws_security_group_rule" "vault_elb_http" {
