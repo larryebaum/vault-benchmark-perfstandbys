@@ -105,7 +105,8 @@ variable "consul_name_prefix" {
 }
 
 variable "availability_zones" {
-    default = "us-east-1a,us-east-1b,us-east-1c"
+    type = list
+    default = ["us-east-1a","us-east-1b","us-east-1c"]
     description = "Availability zones for launching the Vault instances"
 }
 
@@ -149,14 +150,6 @@ variable "consul_nodes" {
     description = "number of Consul instances"
 }
 
-variable "subnets" {
-    description = "list of subnets to launch Vault within"
-}
-
-variable "vpc_id" {
-    description = "VPC ID"
-}
-
 variable "owner" {
     description = "value of owner tag on EC2 instances"
 }
@@ -167,46 +160,4 @@ variable "ttl" {
 
 variable "auto_join_tag" {
     description = "value of ConsulAutoJoin tag used by Consul cluster"
-}
-
-variable "aws-region" {
-    default = "us-east-1"
-    description = "aws region to provision into"
-}
-
-variable "se_region" {
-    description = "se region of the resource"
-}
-
-variable "purpose" {
-    description = "purpose of the resource"
-}
-
-variable "terraform" {
-    description = "resource created by terraform y/n"
-}
-
-variable "tfe_workspace" {
-    description = "tfe workspaces for the resource"
-}
-
-variable "customer" {
-    description = "customer of the resource"
-}
-
-variable "creator" {
-    description = "creator of the resource"
-}
-
-variable "lifecycle_action" {
-    description = "lifecycle action of the resource"
-}
-
-variable "prefix" {
-    default = "larryebaum"
-}
-
-variable "address_space" {
-  description = "The address space that is used by the virtual network. You can supply more than one address space. Changing this forces a new resource to be created."
-  default     = "10.0.0.0/16"
 }
