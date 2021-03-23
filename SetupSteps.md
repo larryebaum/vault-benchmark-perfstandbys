@@ -1,4 +1,7 @@
 # Performance Testing Steps  
+## Prerequisite
+Export AWS access & secret access keys as environment variables. HashiCorp staff can pull these values from Doormat and paste into terminal session.  
+
 ## Setup Vault Cluster  
 1. `mkdir ./perfTest; cd perfTest`  
 1. `git clone https://github.com/larryebaum/vault-benchmark-perfstandbys; cd vault-benchmark-perfstandbys`  
