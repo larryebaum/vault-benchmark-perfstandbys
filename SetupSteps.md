@@ -1,7 +1,7 @@
 # Performance Testing Steps  
 ## Setup Vault Cluster  
 1. `mkdir ./perfTest; cd perfTest`  
-1. `git clone https://github.com/larryebaum/vault-benchmark-perfstandbys`  
+1. `git clone https://github.com/larryebaum/vault-benchmark-perfstandbys; cd vault-benchmark-perfstandbys`  
 1. Edit `vault.auto.tfvars` values for your environment  
 1. Download & Unzip Terraform client v12.30 from https://releases.hashicorp.com/terraform/0.12.30/  
 1. `./terraform init` (to init Terraform; download modules, etc.)  
