@@ -52,7 +52,7 @@ Export AWS access & secret access keys as environment variables. HashiCorp staff
 ## Performance Test / Tuning
 1. SSH to Vault node from separate terminal and run top to monitor CPU
 1. CPU may peak at maximum (efficient encryption) 
-1. On WRK node wrk -t4 -c16 -d60s -H "X-Vault-Token: $VAULT_TOKEN" -s encrypt-transit.lua $VAULT_ADDR/v1/transitTest/encrypt/test encrypts=500000
+1. On WRK node `wrk -t4 -c16 -d60s -H "X-Vault-Token: $VAULT_TOKEN" -s encrypt-transit.lua $VAULT_ADDR/v1/transitTest/encrypt/test encrypts=500000`
 1. Tuning:
     1. Adjust string length to encrypt:
     1. vi ./encrypt-transit.lua
