@@ -29,7 +29,7 @@ Export AWS access & secret access keys as environment variables. HashiCorp staff
 1. View URL vault address, with ":8200" appended to end.  
 1. Login with vault token  
 1. Click Enable new engine, select Transit, click Next, rename 'transitTest', click Enable Engine.  
-1. Click into 'transitPerfEngine', click Create encryption key, rename 'test', click Create encryption key  
+1. Click into 'transitTest', click Create encryption key, rename 'test', click Create encryption key  
 
 ## Setup Performance Test Node  
 1. From AWS console, select Vault node, select Actions > Launch More Like This, review configurations, edit Name tag to clearly identify as WRK node, Launch node.
