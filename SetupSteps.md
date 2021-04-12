@@ -6,9 +6,9 @@ Export AWS access & secret access keys as environment variables. HashiCorp staff
 1. `mkdir ./perfTest; cd perfTest`  
 1. `git clone https://github.com/larryebaum/vault-benchmark-perfstandbys; cd vault-benchmark-perfstandbys`  
 1. Edit `vault.auto.tfvars` values for your environment  
-1. Download & Unzip Terraform client v12.30 from https://releases.hashicorp.com/terraform/0.12.30/  
-1. `./terraform init` (to init Terraform; download modules, etc.)  
-1. `./terraform apply` (to begin build of perfTest cluster)  
+1. Download & Unzip Terraform client v12.30 from https://releases.hashicorp.com/terraform/0.12.30/ into repo directory (so as to not conflict with any other installed binary version).
+1. `./terraform init` (to init Terraform; download modules, etc. using the binary in the local repo directory)  
+1. `./terraform apply` (to begin build of perfTest cluster using the binary in the local repo directory)  
 `
     Apply complete! Resources: 53 added, 0 changed, 0 destroyed.  
     Outputs:  
